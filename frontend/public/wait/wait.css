@@ -1,0 +1,258 @@
+:root {
+  color: #171717;
+  background: #f5f7fb;
+  font-family:
+    Inter,
+    "Noto Sans JP",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(92, 141, 255, 0.13), transparent 34rem),
+    linear-gradient(180deg, #fbfcff 0%, #eef2f8 100%);
+}
+
+.app-shell {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  padding: 22px 16px 40px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: end;
+  padding: 22px 0 18px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #60708a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.35rem, 12vw, 4.8rem);
+  line-height: 0.92;
+  letter-spacing: 0;
+}
+
+.lead {
+  margin: 12px 0 0;
+  color: #5b6575;
+  font-size: 0.98rem;
+}
+
+.status-card {
+  min-width: 130px;
+  padding: 14px 16px;
+  border: 1px solid rgba(142, 154, 174, 0.22);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 16px 42px rgba(48, 62, 87, 0.09);
+  backdrop-filter: blur(16px);
+}
+
+.status-card span,
+.status-card small,
+.summary-grid span,
+.wait-meta span {
+  display: block;
+  color: #667085;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.status-card strong {
+  display: block;
+  margin: 4px 0;
+  font-size: 1.25rem;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr minmax(132px, 0.34fr);
+  gap: 10px;
+  margin: 10px 0 14px;
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  color: #596579;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(126, 140, 161, 0.24);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #171717;
+  font: inherit;
+  font-size: 1rem;
+  outline: none;
+  padding: 0 14px;
+  box-shadow: 0 10px 26px rgba(42, 54, 75, 0.06);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.summary-grid article {
+  padding: 14px 15px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(52, 64, 84, 0.06);
+}
+
+.summary-grid strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 1.45rem;
+}
+
+.wait-list {
+  display: grid;
+  gap: 12px;
+}
+
+.wait-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(129, 140, 159, 0.18);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 14px 36px rgba(52, 64, 84, 0.08);
+}
+
+.wait-card h2 {
+  margin: 0;
+  font-size: 1.18rem;
+  letter-spacing: 0;
+}
+
+.location {
+  margin: 7px 0 0;
+  color: #667085;
+  font-size: 0.9rem;
+}
+
+.wait-value {
+  min-width: 74px;
+  text-align: right;
+}
+
+.wait-value strong {
+  display: block;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.wait-value span {
+  display: inline-flex;
+  margin-top: 7px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.tone-quiet .wait-value span {
+  color: #047857;
+  background: #dff7eb;
+}
+
+.tone-normal .wait-value span {
+  color: #8a5a00;
+  background: #fff1c7;
+}
+
+.tone-busy .wait-value span {
+  color: #b42318;
+  background: #ffe1df;
+}
+
+.tone-full .wait-value span {
+  color: #7a271a;
+  background: #ffd6ce;
+}
+
+.wait-meta {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.wait-meta div {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f7f9fc;
+}
+
+.wait-meta strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.9rem;
+}
+
+.empty-message {
+  margin: 28px 0;
+  color: #667085;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .hero,
+  .controls,
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    align-items: stretch;
+  }
+
+  .status-card {
+    width: 100%;
+  }
+
+  .wait-card {
+    grid-template-columns: 1fr;
+  }
+
+  .wait-value {
+    text-align: left;
+  }
+
+  .wait-meta {
+    grid-template-columns: 1fr;
+  }
+}

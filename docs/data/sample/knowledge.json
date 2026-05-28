@@ -1,0 +1,47 @@
+[
+  {
+    "name": "白龍の舞",
+    "description": "光と音で白龍の上昇を表現するステージ展示です。",
+    "category": "展示",
+    "location_name": "体育館ステージ",
+    "duration_minutes": 15,
+    "recommended_for": "演出展示を見たい人、写真を撮りたい人",
+    "cautions": "フラッシュ撮影は控えてください。開演5分前までの入場がおすすめです。"
+  },
+  {
+    "name": "龍の巣カフェ",
+    "description": "白龍モチーフの軽食と飲み物を楽しめる休憩スペースです。",
+    "category": "飲食",
+    "location_name": "本館1階 多目的室",
+    "duration_minutes": 20,
+    "recommended_for": "休憩したい人、飲食を楽しみたい人",
+    "cautions": "混雑時は席の利用時間が制限される場合があります。"
+  },
+  {
+    "name": "科学実験ラボ",
+    "description": "身近な材料を使った実験を実演します。",
+    "category": "体験",
+    "location_name": "理科室",
+    "duration_minutes": 18,
+    "recommended_for": "体験型企画が好きな人、親子連れ",
+    "cautions": "実験台の薬品や器具にはスタッフの指示なしで触れないでください。"
+  },
+  {
+    "name": "プラネタリウム教室",
+    "description": "教室内に投影した星空を楽しむ上映企画です。",
+    "category": "上映",
+    "location_name": "本館3階 3-B教室",
+    "duration_minutes": 20,
+    "recommended_for": "落ち着いて見たい人、星空が好きな人",
+    "cautions": "上映中の入退室はできるだけ控えてください。"
+  },
+  {
+    "name": "校内スタンプラリー",
+    "description": "校内各所のスタンプを集める周遊企画です。",
+    "category": "体験",
+    "location_name": "受付横スタート地点",
+    "duration_minutes": 30,
+    "recommended_for": "校内を広く回りたい人",
+    "cautions": "階段や廊下では走らないでください。"
+  }
+]

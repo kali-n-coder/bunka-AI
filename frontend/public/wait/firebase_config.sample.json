@@ -1,0 +1,5 @@
+{
+  "mode": "firebase-rtdb",
+  "databaseUrl": "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  "path": "publicWaitTimes"
+}

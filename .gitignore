@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+venv/
+.venv/
+backend/venv/
+
+# Node / Vite
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+dist-ssr/
+
+# Environment files
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Local databases and generated vector indexes
+*.db
+*.sqlite
+*.sqlite3
+backend/sql_app.db
+chroma_db/
+backend/chroma_db/
+
+# Generated/private runtime config
+backend/config/staff_pins.json
+backend/staff_pins.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Local/system files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.tmp.driveupload/
+
