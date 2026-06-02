@@ -40,6 +40,9 @@ backend/chroma_db/
 # Generated/private runtime config
 backend/config/staff_pins.json
 backend/staff_pins.json
+frontend/public/wait/firebase_config.json
+frontend/public/crowd/firebase_config.json
+.firebaserc
 
 # Logs
 logs/
@@ -54,4 +57,3 @@ Thumbs.db
 .idea/
 .vscode/
 .tmp.driveupload/
-

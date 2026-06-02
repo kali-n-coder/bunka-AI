@@ -5,6 +5,7 @@ import type {
   AdminLog,
   AdminPin,
   ChatMessage,
+  CrowdReportSummary,
   ItineraryResponse,
   ModelStatus,
   RagStatus,
@@ -15,7 +16,7 @@ import type {
 import './App.css'
 
 type Mode = 'chat' | 'waits' | 'plan' | 'exhibitions' | 'admin' | 'staff'
-type AdminTab = 'overview' | 'rag' | 'waits' | 'pins'
+type AdminTab = 'overview' | 'rag' | 'waits' | 'crowd' | 'pins'
 type WaitView = 'cards' | 'table'
 type WaitSort = 'id' | 'name' | 'category' | 'waitAsc' | 'waitDesc'
 type UiMessage = ChatMessage & { sources?: SourceChunk[] }
@@ -79,6 +80,30 @@ function categoryClass(category?: string) {
   return 'cat-exhibit'
 }
 
+function crowdTone(status?: string) {
+  if (status === 'empty') return 'calm'
+  if (status === 'short') return 'normal'
+  if (status === 'busy') return 'busy'
+  if (status === 'closed') return 'full'
+  return 'unknown'
+}
+
+function crowdLabel(report?: CrowdReportSummary) {
+  return report?.label || '情報なし'
+}
+
+function formatReportAge(value?: string | null) {
+  if (!value) return '報告なし'
+  const reportedAt = new Date(value)
+  if (Number.isNaN(reportedAt.getTime())) return value
+  const diffMinutes = Math.max(0, Math.floor((Date.now() - reportedAt.getTime()) / 60000))
+  if (diffMinutes < 1) return 'たった今'
+  if (diffMinutes < 60) return `${diffMinutes}分前`
+  const diffHours = Math.floor(diffMinutes / 60)
+  if (diffHours < 24) return `${diffHours}時間前`
+  return reportedAt.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+}
+
 function sourceNames(sources?: SourceChunk[]) {
   const names = new Set<string>()
   for (const source of sources || []) {
@@ -96,6 +121,8 @@ function App() {
   const [chatStatus, setChatStatus] = useState('')
 
   const [waitTimes, setWaitTimes] = useState<WaitTime[]>(sampleWaitTimes)
+  const [crowdReports, setCrowdReports] = useState<CrowdReportSummary[]>([])
+  const [crowdStatus, setCrowdStatus] = useState('')
   const [waitStatus, setWaitStatus] = useState('サンプル表示中')
   const [waitView, setWaitView] = useState<WaitView>('cards')
   const [waitQuery, setWaitQuery] = useState('')
@@ -153,6 +180,7 @@ function App() {
 
   const categories = useMemo(() => ['すべて', ...Array.from(new Set(waitTimes.map((item) => item.category).filter(Boolean)))], [waitTimes])
   const planCandidates = useMemo(() => (planCategory === 'すべて' ? waitTimes : waitTimes.filter((item) => item.category === planCategory)), [planCategory, waitTimes])
+  const crowdByExhibitionId = useMemo(() => new Map(crowdReports.map((item) => [item.exhibition_id, item])), [crowdReports])
   const selectedDetail = useMemo(() => waitTimes.find((item) => item.exhibition_id === selectedDetailId) || null, [selectedDetailId, waitTimes])
   const popularityRanking = useMemo(() => [...waitTimes].sort((a, b) => b.current_wait_minutes - a.current_wait_minutes).slice(0, 5), [waitTimes])
   const categoryCounts = useMemo(() => {
@@ -170,7 +198,11 @@ function App() {
 
   useEffect(() => {
     void loadWaitTimes()
-    const timer = window.setInterval(() => void loadWaitTimes(), 30000)
+    void loadCrowdReports()
+    const timer = window.setInterval(() => {
+      void loadWaitTimes()
+      void loadCrowdReports()
+    }, 30000)
     return () => window.clearInterval(timer)
   }, [])
 
@@ -198,6 +230,17 @@ function App() {
     } catch {
       setWaitTimes(sampleWaitTimes)
       setWaitStatus('サンプル表示中')
+    }
+  }
+
+  async function loadCrowdReports() {
+    try {
+      const data = await apiClient.getCrowdReportSummary()
+      setCrowdReports(Array.isArray(data) ? data : [])
+      setCrowdStatus('')
+    } catch {
+      setCrowdReports([])
+      setCrowdStatus('来校者報告はまだ取得できません')
     }
   }
 
@@ -262,6 +305,7 @@ function App() {
   }
 
   async function loadAdminData(pinOverride = adminPin) {
+    void loadCrowdReports()
     setAdminStatus('admin情報を確認中')
     try {
       const [logs, model, rag, pins] = await Promise.all([
@@ -357,6 +401,21 @@ function App() {
       setAdminStatus(result.enabled ? `公開用の待ち時間を ${result.published}件送信しました` : 'Firebase公開設定が未設定です')
     } catch (error) {
       setAdminStatus(error instanceof Error ? error.message : '公開用の待ち時間を送信できませんでした')
+    }
+  }
+
+  async function syncCrowdReportsNow() {
+    setAdminStatus('Firebaseから来校者報告を取得中')
+    try {
+      const result = await apiClient.syncAdminCrowdReports(adminPin || undefined)
+      await loadCrowdReports()
+      if (!result.enabled) {
+        setAdminStatus('Firebase混雑報告設定が未設定です')
+        return
+      }
+      setAdminStatus(result.synced ? `来校者報告を${result.report_count}件取得しました` : (result.error || '来校者報告を取得できませんでした'))
+    } catch (error) {
+      setAdminStatus(error instanceof Error ? error.message : '来校者報告の取得に失敗しました')
     }
   }
 
@@ -506,10 +565,11 @@ function App() {
                   <button className={waitView === 'cards' ? 'active' : ''} type="button" onClick={() => setWaitView('cards')}>カード</button>
                   <button className={waitView === 'table' ? 'active' : ''} type="button" onClick={() => setWaitView('table')}>表</button>
                 </div>
-                <button type="button" onClick={loadWaitTimes}>更新</button>
+                <button type="button" onClick={() => { void loadWaitTimes(); void loadCrowdReports() }}>更新</button>
               </div>
             </div>
             {waitStatus === 'サンプル表示中' && <p className="inline-status">{sampleWaitNotice}</p>}
+            {crowdStatus && <p className="inline-status">{crowdStatus}</p>}
             <div className="ranking-strip">
               <div><span>人気・混雑ランキング</span><strong>{popularityRanking[0]?.exhibition_name || 'データなし'}</strong></div>
               {popularityRanking.slice(0, 4).map((item, index) => <article key={item.exhibition_id}><span>{index + 1}</span><strong>{item.exhibition_name}</strong><small>{item.current_wait_minutes}分</small></article>)}
@@ -522,9 +582,9 @@ function App() {
               <label>並び替え<select value={waitSort} onChange={(event) => setWaitSort(event.target.value as WaitSort)}><option value="id">展示ID順</option><option value="name">企画名順</option><option value="category">カテゴリ順</option><option value="waitAsc">待ち時間が短い順</option><option value="waitDesc">待ち時間が長い順</option></select></label>
             </div>
             {waitView === 'cards' ? (
-              <div className="wait-grid">{visibleWaitTimes.map((item) => <WaitCard key={item.id} item={item} alternatives={alternativeItems(item)} />)}</div>
+              <div className="wait-grid">{visibleWaitTimes.map((item) => <WaitCard key={item.id} item={item} crowdReport={crowdByExhibitionId.get(item.exhibition_id)} alternatives={alternativeItems(item)} />)}</div>
             ) : (
-              <WaitTable items={visibleWaitTimes} />
+              <WaitTable items={visibleWaitTimes} crowdByExhibitionId={crowdByExhibitionId} />
             )}
           </section>
         )}
@@ -563,7 +623,7 @@ function App() {
           <section className="tool-view">
             <div className="tool-heading">
               <div><h1>admin</h1><p>RAG、運用状態、全企画の待ち時間、スタッフPINをまとめて管理します。</p></div>
-              {adminUnlocked && <div className="tool-actions"><button type="button" onClick={() => loadAdminData()}>更新</button><button type="button" onClick={publishPublicWaitTimes}>公開待ち時間を送信</button><button type="button" onClick={adminLogout}>ログアウト</button></div>}
+              {adminUnlocked && <div className="tool-actions"><button type="button" onClick={() => loadAdminData()}>更新</button><button type="button" onClick={syncCrowdReportsNow}>Firebaseから今すぐ取得</button><button type="button" onClick={publishPublicWaitTimes}>公開待ち時間を送信</button><button type="button" onClick={adminLogout}>ログアウト</button></div>}
             </div>
             {!adminUnlocked ? (
               <form className="tool-form narrow" onSubmit={submitAdminLogin}>
@@ -573,11 +633,12 @@ function App() {
             ) : (
               <>
                 <div className="wait-controls">
-                  <label>表示<select value={adminTab} onChange={(event) => setAdminTab(event.target.value as AdminTab)}><option value="overview">運用状態</option><option value="rag">RAG管理</option><option value="waits">全待ち時間</option><option value="pins">PIN管理</option></select></label>
+                  <label>表示<select value={adminTab} onChange={(event) => setAdminTab(event.target.value as AdminTab)}><option value="overview">運用状態</option><option value="rag">RAG管理</option><option value="waits">全待ち時間</option><option value="crowd">来校者報告</option><option value="pins">PIN管理</option></select></label>
                 </div>
                 {adminTab === 'overview' && <AdminOverview modelStatus={modelStatus} logs={adminLogs} />}
                 {adminTab === 'rag' && <AdminRag ragStatus={ragStatus} ragQuery={ragQuery} setRagQuery={setRagQuery} ragResults={ragResults} submitRagSearch={submitRagSearch} ingestRagDocuments={ingestRagDocuments} />}
                 {adminTab === 'waits' && <AdminWaits items={waitTimes} drafts={adminWaitDrafts} setDrafts={setAdminWaitDrafts} updateWait={updateAdminWait} />}
+                {adminTab === 'crowd' && <AdminCrowdReports reports={crowdReports} items={waitTimes} syncNow={syncCrowdReportsNow} />}
                 {adminTab === 'pins' && <AdminPins pins={adminPins} drafts={adminPinDrafts} setDrafts={setAdminPinDrafts} updatePin={updateAdminPin} />}
               </>
             )}
@@ -613,12 +674,17 @@ function App() {
   )
 }
 
-function WaitCard({ item, alternatives }: { item: WaitTime; alternatives: WaitTime[] }) {
+function WaitCard({ item, crowdReport, alternatives }: { item: WaitTime; crowdReport?: CrowdReportSummary; alternatives: WaitTime[] }) {
   return (
     <article className={`wait-card ${waitTone(item.current_wait_minutes)} ${categoryClass(item.category)}`}>
       <div><h2>{item.exhibition_name || `展示 ${item.exhibition_id}`}</h2><p>{item.location_name || item.category || '場所未設定'}</p></div>
-      <strong>{item.current_wait_minutes}分</strong>
+      <strong className="staff-wait-value"><span>スタッフ更新</span>{item.current_wait_minutes}分</strong>
       <span className="wait-badge">{waitLabel(item.current_wait_minutes)}</span>
+      <div className={`crowd-report-box ${crowdTone(crowdReport?.status)}`}>
+        <div><span>来校者報告</span><strong>{crowdLabel(crowdReport)}</strong></div>
+        <div><span>最近の報告</span><strong>{crowdReport?.report_count ?? 0}件</strong></div>
+        <div><span>最終報告</span><strong>{formatReportAge(crowdReport?.last_reported_at)}</strong></div>
+      </div>
       <dl className="wait-meta">
         <div><dt>カテゴリ</dt><dd>{item.category || '未設定'}</dd></div>
         <div><dt>所要時間</dt><dd>{item.duration_minutes ? `${item.duration_minutes}分` : '未設定'}</dd></div>
@@ -632,10 +698,13 @@ function WaitCard({ item, alternatives }: { item: WaitTime; alternatives: WaitTi
   )
 }
 
-function WaitTable({ items }: { items: WaitTime[] }) {
+function WaitTable({ items, crowdByExhibitionId }: { items: WaitTime[]; crowdByExhibitionId: Map<number, CrowdReportSummary> }) {
   return (
-    <div className="wait-table-wrap"><table className="wait-table"><thead><tr><th>ID</th><th>企画名</th><th>場所</th><th>カテゴリ</th><th>待ち</th><th>状態</th><th>整理券</th></tr></thead><tbody>
-      {items.map((item) => <tr key={item.id} className={waitTone(item.current_wait_minutes)}><td>{item.exhibition_id}</td><td>{item.exhibition_name}</td><td>{item.location_name || '未設定'}</td><td>{item.category || '未設定'}</td><td>{item.current_wait_minutes}分</td><td><span className="wait-badge">{waitLabel(item.current_wait_minutes)}</span></td><td>{item.ticket_status || 'なし'}</td></tr>)}
+    <div className="wait-table-wrap"><table className="wait-table"><thead><tr><th>ID</th><th>企画名</th><th>場所</th><th>カテゴリ</th><th>スタッフ更新</th><th>状態</th><th>来校者報告</th><th>最近の報告</th><th>最終報告</th></tr></thead><tbody>
+      {items.map((item) => {
+        const report = crowdByExhibitionId.get(item.exhibition_id)
+        return <tr key={item.id} className={waitTone(item.current_wait_minutes)}><td>{item.exhibition_id}</td><td>{item.exhibition_name}</td><td>{item.location_name || '未設定'}</td><td>{item.category || '未設定'}</td><td>{item.current_wait_minutes}分</td><td><span className="wait-badge">{waitLabel(item.current_wait_minutes)}</span></td><td><span className={`crowd-pill ${crowdTone(report?.status)}`}>{crowdLabel(report)}</span></td><td>{report?.report_count ?? 0}件</td><td>{formatReportAge(report?.last_reported_at)}</td></tr>
+      })}
     </tbody></table></div>
   )
 }
@@ -682,6 +751,25 @@ function AdminRag({ ragStatus, ragQuery, setRagQuery, ragResults, submitRagSearc
 
 function AdminWaits({ items, drafts, setDrafts, updateWait }: { items: WaitTime[]; drafts: Record<number, number>; setDrafts: Dispatch<SetStateAction<Record<number, number>>>; updateWait: (exhibitionId: number) => void }) {
   return <div className="rag-result-list">{items.map((item) => <article key={item.exhibition_id}><div><strong>{item.exhibition_name}</strong><span>現在 {item.current_wait_minutes}分</span></div><div className="admin-row"><input type="number" min="0" max="240" value={drafts[item.exhibition_id] ?? item.current_wait_minutes} onChange={(event) => setDrafts((current) => ({ ...current, [item.exhibition_id]: Number(event.target.value) }))} /><button type="button" onClick={() => updateWait(item.exhibition_id)}>更新</button></div></article>)}</div>
+}
+
+function AdminCrowdReports({ reports, items, syncNow }: { reports: CrowdReportSummary[]; items: WaitTime[]; syncNow: () => void }) {
+  const names = new Map(items.map((item) => [item.exhibition_id, item.exhibition_name || `展示 ${item.exhibition_id}`]))
+  return (
+    <section className="crowd-admin-panel">
+      <div className="tool-actions"><button type="button" onClick={syncNow}>Firebaseから今すぐ取得</button></div>
+      <div className="crowd-admin-list">
+        {reports.length ? reports.map((report) => (
+          <article key={report.exhibition_id}>
+            <strong>{names.get(report.exhibition_id) || `ID ${report.exhibition_id}`}</strong>
+            <span className={`crowd-pill ${crowdTone(report.status)}`}>{crowdLabel(report)}</span>
+            <span>{report.report_count}件</span>
+            <span>{formatReportAge(report.last_reported_at)}</span>
+          </article>
+        )) : <p className="inline-status">来校者報告はまだ取得できません</p>}
+      </div>
+    </section>
+  )
 }
 
 function AdminPins({ pins, drafts, setDrafts, updatePin }: { pins: AdminPin[]; drafts: Record<number, string>; setDrafts: Dispatch<SetStateAction<Record<number, string>>>; updatePin: (exhibitionId: number) => void }) {

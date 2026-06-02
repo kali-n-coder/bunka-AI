@@ -28,6 +28,13 @@ class Settings(BaseSettings):
     # Example: https://your-project-default-rtdb.firebaseio.com/publicWaitTimes.json
     FIREBASE_WAIT_TIMES_URL: str = ""
     FIREBASE_WAIT_TIMES_AUTH: str = ""
+
+    # Visitor crowd reports from GitHub Pages / Firebase Realtime Database.
+    # Example: https://your-project-default-rtdb.firebaseio.com/crowdReports.json
+    FIREBASE_CROWD_REPORTS_URL: str = ""
+    FIREBASE_CROWD_REPORTS_AUTH: str = ""
+    FIREBASE_CROWD_SYNC_INTERVAL_SECONDS: int = 60
+    CROWD_REPORT_WINDOW_MINUTES: int = 15
     
     model_config = SettingsConfigDict(env_file=".env")
 

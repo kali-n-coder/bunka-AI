@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>混雑報告</title>
+    <link rel="stylesheet" href="./crowd.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="page-header">
+        <p class="eyebrow">Hakuryu Festival</p>
+        <h1>混雑報告</h1>
+        <p class="lead">
+          近くで見た範囲で、いまの混み具合を教えてください。
+        </p>
+      </header>
+
+      <section id="configNotice" class="notice" hidden>
+        <strong>Firebase設定がまだありません</strong>
+        <span>
+          <code>frontend/public/crowd/firebase_config.sample.json</code> を参考に
+          <code>firebase_config.json</code> を配置すると送信できます。
+        </span>
+      </section>
+
+      <section class="picker" aria-label="企画選択">
+        <label class="field">
+          <span>企画を選ぶ</span>
+          <select id="exhibitionSelect">
+            <option value="">読み込み中...</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>名前や場所で探す</span>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="例: 3-F、飲食、ゲーム"
+            autocomplete="off"
+          />
+        </label>
+
+        <article id="selectedCard" class="selected-card" hidden>
+          <span id="selectedCategory"></span>
+          <strong id="selectedName"></strong>
+          <small id="selectedLocation"></small>
+        </article>
+      </section>
+
+      <section class="report-panel" aria-label="混雑状況">
+        <p class="question">この企画は、いまどれくらい混んでいますか？</p>
+        <div id="statusButtons" class="status-grid">
+          <button type="button" data-status="empty">
+            <strong>すぐ入れそう</strong>
+            <span>ほとんど並んでいない</span>
+          </button>
+          <button type="button" data-status="short">
+            <strong>少し待つ</strong>
+            <span>短い列がある</span>
+          </button>
+          <button type="button" data-status="busy">
+            <strong>かなり混んでいる</strong>
+            <span>はっきり列がある</span>
+          </button>
+          <button type="button" data-status="closed">
+            <strong>受付停止・満員っぽい</strong>
+            <span>入れなさそう</span>
+          </button>
+        </div>
+
+        <button id="submitButton" class="submit-button" type="button" disabled>
+          送信する
+        </button>
+      </section>
+
+      <p class="privacy-note">
+        報告は匿名で、混雑目安として使われます。正確でなくても大丈夫です。実際の待ち時間や受付状況は現地の案内を確認してください。
+      </p>
+
+      <section id="messageBox" class="message" aria-live="polite" hidden></section>
+    </main>
+
+    <script type="module" src="./crowd.js"></script>
+  </body>
+</html>

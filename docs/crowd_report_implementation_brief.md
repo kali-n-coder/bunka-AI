@@ -540,3 +540,9 @@ AIに渡す場合も、必ず「来校者報告による目安」として扱っ
 
 まず実装計画を短く出したあと、実装を進めてください。
 ```
+
+## 17. Firebase CLI セットアップ参照
+
+実装後に Firebase Realtime Database rules を反映する場合は、`docs/firebase_crowd_report_setup.md` の手順を参照してください。
+
+このリポジトリでは Firebase Hosting は使わず、来校者向けページは既存の GitHub Pages 運用を継続します。Firebase CLI では `firebase deploy --only database` により database rules だけをデプロイします。

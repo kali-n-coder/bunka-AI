@@ -1,0 +1,27 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "crowdReports": {
+      ".read": true,
+      "$exhibitionId": {
+        "$reportId": {
+          ".write": "!data.exists() && newData.hasChildren(['status', 'exhibitionId', 'createdAt'])",
+          ".validate": "newData.hasChildren(['status', 'exhibitionId', 'createdAt'])",
+          "status": {
+            ".validate": "newData.isString() && newData.val().matches(/^(empty|short|busy|closed)$/)"
+          },
+          "exhibitionId": {
+            ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 999"
+          },
+          "createdAt": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    }
+  }
+}

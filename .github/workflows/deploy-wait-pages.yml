@@ -23,6 +23,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     env:
       FIREBASE_WAIT_CONFIG_JSON: ${{ secrets.FIREBASE_WAIT_CONFIG_JSON }}
+      FIREBASE_CROWD_CONFIG_JSON: ${{ secrets.FIREBASE_CROWD_CONFIG_JSON }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -43,6 +44,12 @@ jobs:
         working-directory: frontend
         run: |
           printf '%s' "$FIREBASE_WAIT_CONFIG_JSON" > public/wait/firebase_config.json
+
+      - name: Write Firebase crowd config
+        if: ${{ env.FIREBASE_CROWD_CONFIG_JSON != '' }}
+        working-directory: frontend
+        run: |
+          printf '%s' "$FIREBASE_CROWD_CONFIG_JSON" > public/crowd/firebase_config.json
 
       - name: Build
         working-directory: frontend

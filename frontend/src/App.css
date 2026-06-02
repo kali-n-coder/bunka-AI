@@ -537,6 +537,18 @@
   font-size: 22px;
 }
 
+.staff-wait-value {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+}
+
+.staff-wait-value span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
 .wait-badge {
   grid-column: 1 / -1;
   width: fit-content;
@@ -546,6 +558,69 @@
   color: var(--wait-tone, var(--muted));
   font-size: 12px;
   font-weight: 700;
+}
+
+.crowd-report-box {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--crowd-tone, var(--border));
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--surface-hover);
+}
+
+.crowd-report-box.calm,
+.crowd-pill.calm {
+  --crowd-tone: #17a36b;
+  --crowd-tone-bg: #e9f8f0;
+}
+
+.crowd-report-box.normal,
+.crowd-pill.normal {
+  --crowd-tone: #b7791f;
+  --crowd-tone-bg: #fff7df;
+}
+
+.crowd-report-box.busy,
+.crowd-pill.busy {
+  --crowd-tone: #d97706;
+  --crowd-tone-bg: #fff1df;
+}
+
+.crowd-report-box.full,
+.crowd-pill.full {
+  --crowd-tone: #dc2626;
+  --crowd-tone-bg: #feecec;
+}
+
+.crowd-report-box span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.crowd-report-box strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-h);
+  font-size: 13px;
+}
+
+.crowd-pill {
+  display: inline-flex;
+  max-width: 180px;
+  border-radius: 999px;
+  padding: 4px 9px;
+  overflow: hidden;
+  background: var(--crowd-tone-bg, var(--surface-hover));
+  color: var(--crowd-tone, var(--muted));
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .wait-meta {
@@ -643,7 +718,7 @@
 .wait-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 640px;
+  min-width: 920px;
 }
 
 .wait-table th,
@@ -1115,6 +1190,37 @@
   color: var(--main-bg);
   font: inherit;
   cursor: pointer;
+}
+
+.crowd-admin-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.crowd-admin-list {
+  display: grid;
+  gap: 10px;
+}
+
+.crowd-admin-list article {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(160px, auto) 90px 120px;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--main-bg);
+}
+
+.crowd-admin-list strong {
+  min-width: 0;
+  color: var(--text-h);
+}
+
+.crowd-admin-list span {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .ops-grid {

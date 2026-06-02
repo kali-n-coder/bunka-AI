@@ -29,6 +29,15 @@ export type WaitTime = {
   capacity_status?: string;
 };
 
+export type CrowdReportSummary = {
+  exhibition_id: number;
+  status: 'empty' | 'short' | 'busy' | 'closed' | string;
+  label: string;
+  report_count: number;
+  last_reported_at?: string | null;
+  source?: string;
+};
+
 export type SourceChunk = {
   content: string;
   metadata: Record<string, unknown>;
@@ -219,8 +228,21 @@ export const apiClient = {
     return response.json();
   },
 
+  async syncAdminCrowdReports(adminPin?: string): Promise<{ enabled: boolean; synced: boolean; report_count: number; summary_count: number; last_synced_at?: string | null; error?: string | null }> {
+    const response = await fetch(`${BASE_URL}/api/v1/admin/crowd-reports/sync`, {
+      method: 'POST',
+      headers: adminPin ? { 'x-admin-pin': adminPin } : undefined,
+    });
+    if (!response.ok) throw new Error(await parseError(response));
+    return response.json();
+  },
+
   async getWaitTimes(): Promise<WaitTime[]> {
     return this.get('/api/v1/wait-times');
+  },
+
+  async getCrowdReportSummary(): Promise<CrowdReportSummary[]> {
+    return this.get('/api/v1/crowd-reports/summary');
   },
 
   async updateWaitTime(exhibitionId: number, waitMinutes: number, staffPin: string) {

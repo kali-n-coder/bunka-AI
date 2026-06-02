@@ -1,0 +1,320 @@
+[
+    {
+        "id":  1,
+        "name":  "岩沢精神病棟",
+        "category":  "体験",
+        "location_name":  "4F 1-C教室"
+    },
+    {
+        "id":  2,
+        "name":  "4番出口",
+        "category":  "体験",
+        "location_name":  "4F 1-D教室"
+    },
+    {
+        "id":  3,
+        "name":  "Travel abroad! Photo spots",
+        "category":  "展示",
+        "location_name":  "4F 英語部"
+    },
+    {
+        "id":  4,
+        "name":  "トイワールド・シューティング",
+        "category":  "体験",
+        "location_name":  "4F 1-F教室"
+    },
+    {
+        "id":  5,
+        "name":  "殺人鬼脱出ゲーム",
+        "category":  "体験",
+        "location_name":  "4F 1-E教室"
+    },
+    {
+        "id":  6,
+        "name":  "龍一情景2020~2021\u0026ニャンコの竜一日記",
+        "category":  "展示",
+        "location_name":  "4F 同窓会"
+    },
+    {
+        "id":  7,
+        "name":  "一閃賭場",
+        "category":  "体験",
+        "location_name":  "3F 1-A教室"
+    },
+    {
+        "id":  8,
+        "name":  "競人",
+        "category":  "体験",
+        "location_name":  "3F 1-B教室"
+    },
+    {
+        "id":  9,
+        "name":  "海底2Aマイル",
+        "category":  "体験",
+        "location_name":  "3F 2-A教室"
+    },
+    {
+        "id":  10,
+        "name":  "一般人格付けチェック",
+        "category":  "体験",
+        "location_name":  "3F 2-B教室"
+    },
+    {
+        "id":  11,
+        "name":  "SUPER J-3 WORLD",
+        "category":  "体験",
+        "location_name":  "3F 中3教室"
+    },
+    {
+        "id":  12,
+        "name":  "パラダイス・Y\u0026K",
+        "category":  "体験",
+        "location_name":  "3F 中2教室"
+    },
+    {
+        "id":  13,
+        "name":  "教室に忘れた教科書",
+        "category":  "体験",
+        "location_name":  "3F 中1教室"
+    },
+    {
+        "id":  14,
+        "name":  "いもけんぴん。作品販売",
+        "category":  "物販",
+        "location_name":  "3F 美術部"
+    },
+    {
+        "id":  15,
+        "name":  "文芸部作品販売",
+        "category":  "物販",
+        "location_name":  "3F 文芸部"
+    },
+    {
+        "id":  16,
+        "name":  "Darts Festival",
+        "category":  "体験",
+        "location_name":  "2F 2-C教室"
+    },
+    {
+        "id":  17,
+        "name":  "はっぴーわっしょいどっこいしょ縁日",
+        "category":  "体験",
+        "location_name":  "2F 2-D教室"
+    },
+    {
+        "id":  18,
+        "name":  "ミッション・イン・クラスルーム",
+        "category":  "体験",
+        "location_name":  "2F 2-E教室"
+    },
+    {
+        "id":  19,
+        "name":  "ともっちゃ",
+        "category":  "体験",
+        "location_name":  "2F 2-F教室"
+    },
+    {
+        "id":  20,
+        "name":  "enjoy!先行開催夏祭り",
+        "category":  "体験",
+        "location_name":  "2F 定時制"
+    },
+    {
+        "id":  21,
+        "name":  "写真展示",
+        "category":  "展示",
+        "location_name":  "1F 写真部"
+    },
+    {
+        "id":  22,
+        "name":  "竜ヶ崎一高書道展",
+        "category":  "展示",
+        "location_name":  "1F 書道部"
+    },
+    {
+        "id":  23,
+        "name":  "ひぇうま横丁",
+        "category":  "飲食",
+        "location_name":  "屋外 3-E"
+    },
+    {
+        "id":  24,
+        "name":  "ベビすぎてカス!",
+        "category":  "飲食",
+        "location_name":  "屋外 3-B"
+    },
+    {
+        "id":  25,
+        "name":  "PTA",
+        "category":  "飲食",
+        "location_name":  "屋外 PTA"
+    },
+    {
+        "id":  26,
+        "name":  "同窓会",
+        "category":  "飲食",
+        "location_name":  "屋外 同窓会"
+    },
+    {
+        "id":  27,
+        "name":  "抹茶処 和",
+        "category":  "飲食",
+        "location_name":  "屋外 茶道部"
+    },
+    {
+        "id":  28,
+        "name":  "炭串松尾",
+        "category":  "飲食",
+        "location_name":  "屋外 3-A"
+    },
+    {
+        "id":  29,
+        "name":  "トミーパンチ",
+        "category":  "飲食",
+        "location_name":  "屋外 3-C"
+    },
+    {
+        "id":  30,
+        "name":  "船橋ポプみ♡四家明彦－ン",
+        "category":  "飲食",
+        "location_name":  "屋外 3-D"
+    },
+    {
+        "id":  31,
+        "name":  "オカダナルド",
+        "category":  "飲食",
+        "location_name":  "屋外 3-F"
+    },
+    {
+        "id":  32,
+        "name":  "半弓体験会",
+        "category":  "体験",
+        "location_name":  "弓道場"
+    },
+    {
+        "id":  33,
+        "name":  "射撃ゲーム",
+        "category":  "体験",
+        "location_name":  "射撃場"
+    },
+    {
+        "id":  34,
+        "name":  "休けい室",
+        "category":  "休憩",
+        "location_name":  "特別棟4F 棋道部"
+    },
+    {
+        "id":  35,
+        "name":  "ロボット体験",
+        "category":  "体験",
+        "location_name":  "特別棟4F コモンズ"
+    },
+    {
+        "id":  36,
+        "name":  "e-Sports体験",
+        "category":  "体験",
+        "location_name":  "特別棟4F コモンズ"
+    },
+    {
+        "id":  37,
+        "name":  "ワクワク!サイエンスワールド",
+        "category":  "体験",
+        "location_name":  "特別棟3F 化学室・グラウンド"
+    },
+    {
+        "id":  38,
+        "name":  "3DプリンターSHOP",
+        "category":  "物販",
+        "location_name":  "特別棟2F クリエイティブラボ"
+    },
+    {
+        "id":  39,
+        "name":  "クリエイティブラボへようこそ!!",
+        "category":  "体験",
+        "location_name":  "特別棟2F クリエイティブラボ"
+    },
+    {
+        "id":  40,
+        "name":  "スタンプラリー",
+        "category":  "体験",
+        "location_name":  "1F会議室・特別棟2Fクリエイティブラボ"
+    },
+    {
+        "id":  41,
+        "name":  "オープニング",
+        "category":  "ステージ",
+        "location_name":  "外ステージ"
+    },
+    {
+        "id":  42,
+        "name":  "軽音楽部パフォーマンス",
+        "category":  "ステージ",
+        "location_name":  "外ステージ"
+    },
+    {
+        "id":  43,
+        "name":  "クイズ大会",
+        "category":  "ステージ",
+        "location_name":  "外ステージ"
+    },
+    {
+        "id":  44,
+        "name":  "野球応援",
+        "category":  "ステージ",
+        "location_name":  "外ステージ"
+    },
+    {
+        "id":  45,
+        "name":  "仮装コンテスト",
+        "category":  "ステージ",
+        "location_name":  "外ステージ"
+    },
+    {
+        "id":  46,
+        "name":  "書道パフォーマンス",
+        "category":  "ステージ",
+        "location_name":  "外ステージ"
+    },
+    {
+        "id":  47,
+        "name":  "チアパフォーマンス",
+        "category":  "ステージ",
+        "location_name":  "外ステージ"
+    },
+    {
+        "id":  48,
+        "name":  "吹奏楽部パフォーマンス",
+        "category":  "ステージ",
+        "location_name":  "外ステージ"
+    },
+    {
+        "id":  49,
+        "name":  "飲食ラストオーダー",
+        "category":  "案内",
+        "location_name":  "校内飲食企画"
+    },
+    {
+        "id":  50,
+        "name":  "一般公開終了",
+        "category":  "案内",
+        "location_name":  "校内全体"
+    },
+    {
+        "id":  51,
+        "name":  "中ステージ吹奏楽部パフォーマンス",
+        "category":  "ステージ",
+        "location_name":  "中ステージ"
+    },
+    {
+        "id":  52,
+        "name":  "中ステージ軽音楽部パフォーマンス",
+        "category":  "ステージ",
+        "location_name":  "中ステージ"
+    },
+    {
+        "id":  53,
+        "name":  "中ステージ閉会セレモニー",
+        "category":  "ステージ",
+        "location_name":  "中ステージ"
+    }
+]
