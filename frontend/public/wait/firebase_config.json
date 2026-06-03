@@ -1,0 +1,6 @@
+{
+  "mode": "firebase-rtdb",
+  "databaseUrl": "https://hakuryu-wait-reports-2026-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "path": "publicWaitTimes",
+  "reportPath": "visitorWaitReports"
+}

@@ -1,4 +1,6 @@
 const REFRESH_MS = 30000;
+const REPORT_COOLDOWN_MS = 60000;
+const WAIT_REPORT_OPTIONS = [0, 5, 10, 20, 30, 45, 60];
 
 const elements = {
   list: document.querySelector("#waitList"),
@@ -57,6 +59,13 @@ function firebaseUrl() {
   return `${databaseUrl}/${path}.json`;
 }
 
+function firebaseReportUrl() {
+  const databaseUrl = String(config.databaseUrl || "").replace(/\/$/, "");
+  const path = String(config.reportPath || "visitorWaitReports").replace(/^\/|\/$/g, "");
+  if (!databaseUrl) return "";
+  return `${databaseUrl}/${path}.json`;
+}
+
 async function fetchWaitTimes() {
   if (!config) await loadConfig();
 
@@ -92,6 +101,58 @@ function normalizeItems(data) {
     .sort((a, b) => a.current_wait_minutes - b.current_wait_minutes || a.exhibition_id - b.exhibition_id);
 }
 
+function visitorClientId() {
+  const key = "hakuryu_wait_report_client_id";
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id =
+      crypto.randomUUID?.() ||
+      `client-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
+function reportCooldownKey(exhibitionId) {
+  return `hakuryu_wait_reported_at_${exhibitionId}`;
+}
+
+function canReport(exhibitionId) {
+  const last = Number(localStorage.getItem(reportCooldownKey(exhibitionId)) || 0);
+  return Date.now() - last >= REPORT_COOLDOWN_MS;
+}
+
+async function submitWaitReport(exhibitionId, waitMinutes) {
+  if (!config) await loadConfig();
+  if ((config.mode || "firebase-rtdb") === "sample") {
+    throw new Error("サンプル表示中は報告できません");
+  }
+  if (!canReport(exhibitionId)) {
+    throw new Error("同じ企画への連続報告は少し待ってください");
+  }
+
+  const url = firebaseReportUrl();
+  if (!url) throw new Error("FirebaseのreportPathが未設定です");
+
+  const payload = {
+    exhibition_id: Number(exhibitionId),
+    wait_minutes: Number(waitMinutes),
+    client_id: visitorClientId(),
+    reported_at: new Date().toISOString(),
+    user_agent: navigator.userAgent.slice(0, 160),
+  };
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error("待ち時間を報告できませんでした");
+
+  localStorage.setItem(reportCooldownKey(exhibitionId), String(Date.now()));
+  elements.connection.textContent = "報告しました";
+}
+
 function updateCategories(items) {
   const selected = elements.category.value;
   const categories = Array.from(new Set(items.map((item) => item.category).filter(Boolean))).sort((a, b) =>
@@ -117,6 +178,13 @@ function filteredItems() {
   });
 }
 
+function reportButtons(item) {
+  return WAIT_REPORT_OPTIONS.map((minutes) => {
+    const label = minutes === 60 ? "60分+" : `${minutes}分`;
+    return `<button type="button" data-report-id="${item.exhibition_id}" data-report-minutes="${minutes}">${label}</button>`;
+  }).join("");
+}
+
 function render() {
   const items = filteredItems();
   elements.list.innerHTML = items
@@ -137,6 +205,10 @@ function render() {
             <div><span>整理券</span><strong>${escapeText(item.ticket_status)}</strong></div>
             <div><span>定員</span><strong>${escapeText(item.capacity_status)}</strong></div>
             <div><span>企画ID</span><strong>${item.exhibition_id}</strong></div>
+          </div>
+          <div class="report-box">
+            <span>いまの待ち時間を報告</span>
+            <div class="report-buttons">${reportButtons(item)}</div>
           </div>
         </article>
       `;
@@ -169,6 +241,20 @@ async function refresh() {
 
 elements.search.addEventListener("input", render);
 elements.category.addEventListener("change", render);
+elements.list.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-report-id][data-report-minutes]");
+  if (!button) return;
+
+  button.disabled = true;
+  try {
+    await submitWaitReport(button.dataset.reportId, button.dataset.reportMinutes);
+  } catch (error) {
+    elements.connection.textContent = error.message || "報告に失敗しました";
+    console.warn(error);
+  } finally {
+    button.disabled = false;
+  }
+});
 
 void refresh();
 window.setInterval(refresh, REFRESH_MS);
